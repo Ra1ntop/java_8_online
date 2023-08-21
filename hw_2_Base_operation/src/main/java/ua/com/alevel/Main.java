@@ -23,9 +23,5 @@ public class Main {
 
 //        String lesson = "3";
         Service.findTime(Integer.valueOf(lesson));
-
-
-
-
     }
 }
