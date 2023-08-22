@@ -21,6 +21,7 @@ public class Main {
         System.out.println("Please enter number of lessons for 3d task");
         String lesson = bufferedReader.readLine();
 
+
 //        String lesson = "3";
         Service.findTime(Integer.valueOf(lesson));
     }
