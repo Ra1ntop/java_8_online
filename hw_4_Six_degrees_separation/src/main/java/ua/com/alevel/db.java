@@ -1,6 +1,5 @@
 package ua.com.alevel;
 
-import com.sun.source.tree.BreakTree;
 
 import java.util.Random;
 
@@ -10,8 +9,8 @@ public class db {
         for (int i = 0; i < 8; i++) {
             Person person = new Person();
             person.setId(i);
-            person.setHend(false);
             arrPersons[i] = person;
+
         }
         System.out.println(handShake(arrPersons));
 
@@ -21,16 +20,19 @@ public class db {
         Random random = new Random();
         while(checker){
             for (int i = 0; i < arrPersons.length; i++) {
+                System.out.println("i= "+i);
                 int randomNumber = random.nextInt(100) + 1;
                 if (randomNumber<80) {
-                    Person person = arrPersons[i];
-                    Person.setHend(true);
+                    System.out.println(arrPersons[i].gethandShake());
+                    arrPersons[i].sethandShake(true);
                     System.out.println("Случайное число: " + randomNumber);
-                    System.out.println("ID персоны: " + person.getId() + " Руопожатие было передена персоне с ид: " + (i+1) );
+                    System.out.println("ID персоны: " + arrPersons[i].getId() + " Рукопожатие было передена персоне с ид: " + (i+1) + " " + arrPersons[i].gethandShake());
                 }else {
+
+                    System.out.println("false Случайное число: " + randomNumber);
+                    System.out.println("Ne peredali: " + arrPersons[i].gethandShake());
+                    arrPersons[i].sethandShake(false);
                     i--;
-                    System.out.println("Случайное число: " + randomNumber);
-                    System.out.println("Ne peredali: ");
                 }
 
             }

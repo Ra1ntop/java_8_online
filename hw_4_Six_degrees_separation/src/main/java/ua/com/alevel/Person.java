@@ -2,7 +2,8 @@ package ua.com.alevel;
 
 public class Person {
     private int id;
-    private static boolean Hend = false;
+    private static boolean handShake = false;
+
 
     public void setId(int id) {
         this.id = id;
@@ -13,12 +14,12 @@ public class Person {
     }
 
 
-    public static boolean isHend() {
-        return Hend;
+    public boolean gethandShake() {
+        return handShake;
     }
 
-    public static void setHend(boolean hend) {
-        Hend = hend;
+    public static void sethandShake(boolean hand) {
+        handShake = hand;
     }
 
 }
