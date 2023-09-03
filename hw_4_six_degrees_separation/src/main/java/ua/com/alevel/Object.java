@@ -21,7 +21,7 @@ public class Object {
     public void receive(Object sender) {
         System.out.println("Object " + this.id + " received a handshake from Object " + sender.id);
 
-        if (Math.random() < 0.1) {  // 80% ймовірність передачі рукостискання далі
+        if (Math.random() < 0.8) {  // 80% probability
             if (this.id < 8) {
                 Object nextReceiver = new Object(this.id + 1);
                 nextReceiver.receive(this);

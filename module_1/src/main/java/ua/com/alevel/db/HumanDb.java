@@ -1,9 +1,6 @@
 package ua.com.alevel.db;
 
 import ua.com.alevel.entity.Human;
-import ua.com.alevel.controller.MainController;
-
-import java.util.UUID;
 
 public class HumanDb {
     private Human[] humans = new Human[1];
