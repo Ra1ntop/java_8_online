@@ -80,6 +80,9 @@ public class MainController {
                 System.out.println("----------------------------------------------");
                 System.out.println();
             }
+            else {
+                System.out.println("No one entity");
+            }
         }
     }
 }
