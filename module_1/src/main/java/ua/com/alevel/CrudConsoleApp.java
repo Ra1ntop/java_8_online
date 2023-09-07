@@ -12,6 +12,7 @@ public class CrudConsoleApp {
     private static int groupCount = 0;
     private static int groupCounter = 1;
     private static final int DEFAULT_GROUP_ID = -1;
+
     private static void resizeUsersArray() {
         int newSize = users.length * 2;
         User[] newArray = new User[newSize];
@@ -209,11 +210,30 @@ public class CrudConsoleApp {
                 if (isNumeric(groupIdStr)) {
                     int groupId = Integer.parseInt(groupIdStr);
 
-                    if (userId >= 0 && userId < userCount && groupId >= 0 && groupId < groupCount) {
-                        users[userId].setGroupId(groupId);
-                        System.out.println("Студента додано до групи.");
-                    } else {
-                        System.out.println("Невірний ID студента або групи.");
+                    boolean userExists = false;
+                    boolean groupExists = false;
+
+                    for (int i = 0; i < userCount; i++) {
+                        if (users[i].getId() == userId) {
+                            userExists = true;
+                            for (int j = 0; j < groupCount; j++) {
+                                if (groups[j].getId() == groupId) {
+                                    groupExists = true;
+                                    users[i].setGroupId(groupId);
+                                    System.out.println("Студента додано до групи.");
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+
+                    if (!userExists) {
+                        System.out.println("Студент з таким ID не існує.");
+                    }
+
+                    if (!groupExists) {
+                        System.out.println("Група з таким ID не існує.");
                     }
                 } else {
                     System.out.println("Невірний формат ID групи. Введіть числове значення.");
@@ -224,11 +244,10 @@ public class CrudConsoleApp {
         } else {
             System.out.println("Студентів або груп не створено.");
         }
-
     }
 
     private static void listAllUsers() {
-        if (userCount!=0 ){
+        if (userCount != 0) {
             System.out.println("Список студентів:");
             for (int i = 0; i < userCount; i++) {
                 User user = users[i];
@@ -246,14 +265,14 @@ public class CrudConsoleApp {
                     }
                 }
                 String idIfDefault = "default";
-                if (groupId == -1){
+                if (groupId == -1) {
                     System.out.println("ID: " + userId + ", Ім'я: " + userName + ", ID групи: " + idIfDefault + ", Назва групи: " + groupName);
-                }else {
+                } else {
                     System.out.println("ID: " + userId + ", Ім'я: " + userName + ", ID групи: " + groupId + ", Назва групи: " + groupName);
 
                 }
             }
-        }else {
+        } else {
             System.out.println("Студентов не создано");
         }
 
@@ -268,7 +287,7 @@ public class CrudConsoleApp {
     }
 
     private static void listStudentsInGroup(BufferedReader reader) throws IOException {
-        if(userCount != 0 && groupCount != 0){
+        if (userCount != 0 && groupCount != 0) {
             listAllGroups();
             System.out.print("Введіть ID групи для виводу студентів: ");
             String groupIdStr = reader.readLine();
@@ -298,14 +317,13 @@ public class CrudConsoleApp {
                 if (!groupExists) {
                     System.out.println("Група з таким ID не існує.");
                 }
-                if (studentsInGroup==0){
+                if (studentsInGroup == 0) {
                     System.out.println("Cтудентов в группе нет");
                 }
             } else {
                 System.out.println("Невірний формат ID групи. Введіть числове значення.");
             }
-        }
-        else {
+        } else {
             System.out.println("Студент или группа не созданы");
         }
     }
