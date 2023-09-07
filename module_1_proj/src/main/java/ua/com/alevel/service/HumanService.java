@@ -11,6 +11,7 @@ public class HumanService {
         human.setFirstName(firstName);
         human.setLastName(lastName);
         human.setAge(age);
+        human.setGroupId("-1");
         humanDb.create(human);
     }
     public void deleqte(String id){
