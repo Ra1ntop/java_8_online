@@ -4,7 +4,6 @@ public class Person {
     private int id;
     private static boolean handShake = false;
 
-
     public void setId(int id) {
         this.id = id;
     }
@@ -13,7 +12,6 @@ public class Person {
         return id;
     }
 
-
     public boolean gethandShake() {
         return handShake;
     }
@@ -21,5 +19,4 @@ public class Person {
     public static void sethandShake(boolean hand) {
         handShake = hand;
     }
-
 }

@@ -13,7 +13,7 @@ public class HumanService {
         human.setAge(age);
         humanDb.create(human);
     }
-    public void deleqte(String id){
+    public void delete(String id){
         humanDb.delete(id);
     }
 
