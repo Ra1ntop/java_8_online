@@ -1,3 +1,5 @@
+package ua.com.alevel;
+
 import java.util.Arrays;
 
 public class Main {

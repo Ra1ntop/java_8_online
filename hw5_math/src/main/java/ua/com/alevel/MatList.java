@@ -1,3 +1,4 @@
+package ua.com.alevel;
 import java.util.Arrays;
 
 public class MatList<E extends Number & Comparable<E>> {

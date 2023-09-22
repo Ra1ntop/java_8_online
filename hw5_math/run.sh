@@ -1,2 +1,2 @@
 mvn clean package
-java -jar target/reversestring.jar
+java -jar target/math.jar
