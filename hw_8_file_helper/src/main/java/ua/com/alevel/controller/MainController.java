@@ -219,6 +219,7 @@ public class MainController {
 
         System.out.println("Введите название папки которую хотите удалить");
         String dirName;
+
         try {
             dirName = bufferedReader.readLine();
         } catch (IOException e) {
