@@ -217,7 +217,7 @@ public class MainController {
     private void deleteDirectory() {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-        System.out.println("Введите название папки которую хотите удалить");
+        System.out.println("Введите название папки или файла который вы хотите удалить");
         String dirName;
 
         try {
@@ -243,6 +243,15 @@ public class MainController {
             } else {
                 System.out.println("Видалення скасовано.");
             }
+        } else if (Files.exists(dirPath) && Files.isRegularFile(dirPath)) {
+
+            try {
+                Files.delete(dirPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Файл с названием: " + dirPath + " был успешно удален");
+            
         } else {
             System.out.println("Папка з таким ім'ям не існує або це не папка.");
         }
