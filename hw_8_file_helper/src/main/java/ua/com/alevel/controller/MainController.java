@@ -10,6 +10,8 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainController {
     private Path pathNow;
@@ -29,7 +31,7 @@ public class MainController {
 
         menu();
         String position = "";
-        while ((position = bufferedReader.readLine())!=null){
+        while ((position = bufferedReader.readLine()) != null) {
             crud(position, bufferedReader);
             menu();
         }
@@ -37,13 +39,13 @@ public class MainController {
 
     public void menu() {
         System.out.println();
-        System.out.println("If u wanna список всіх файлів та папок по зазначеній директорії press 1");
-        System.out.println("If u wanna створення файла чи папки в зазначеній директорії press 2");
-        System.out.println("If u wanna видалення файла чи папки в зазначеній директорії press 3");
-        System.out.println("If u wanna переміщення файла чи папки із зазначеної директорії в зазначену директорію press 4");
+        System.out.println("If u wanna readDirectory press 1");
+        System.out.println("If u wanna changeDirectory press 2");
+        System.out.println("If u createDirectory press 3");
+        System.out.println("If u wanna deleteDirectory press 4");
         System.out.println("If u wanna пошук файла чи папки по зазначеній директорії press 4");
         System.out.println("If u wanna пошук тексту в усіх файлах та папках по зазначеній директорії press 5");
-        System.out.println("If u wanna вихід з програми press 6");
+        System.out.println("If u wanna exit press 6");
         System.out.println();
     }
 
@@ -51,8 +53,8 @@ public class MainController {
         switch (position) {
             case "1" -> readDirectory();
             case "2" -> changeDirectory();
-            case "3" -> System.out.println("position = " + position);
-            case "4" -> System.out.println("position = " + position);
+            case "3" -> createDirectory();
+            case "4" -> deleteDirectory();
             case "5" -> System.out.println("position = " + position);
             case "6" -> System.exit(0);
         }
@@ -122,11 +124,11 @@ public class MainController {
             }
             String path = (getPathNow() + "/" + choise + "/");
             Path path1 = Paths.get(path);
-            if (Files.exists(path1)){
+            if (Files.exists(path1)) {
                 setPathNow(Path.of(getPathNow() + "/" + choise + "/"));
                 System.out.println("choise: " + choise);
                 System.out.println(getPathNow());
-            }else {
+            } else {
                 System.out.println("Такой папки нет");
                 changeDirectory();
             }
@@ -134,18 +136,134 @@ public class MainController {
         } else if (resultChoise.equals("2")) {
             Path currentPath = Paths.get(String.valueOf(getPathNow()));
             Path parentPath = currentPath.getParent();
-            if (parentPath!=null){
+            if (parentPath != null) {
                 setPathNow(parentPath);
                 System.out.println("Перешли в папку выше:");
                 System.out.println(getPathNow());
-            }else {
+            } else {
                 System.out.println("Вы находитесь в корневой директории, нельзя подняться выше.");
             }
-        }else {
+        } else {
             System.out.println("Вы ввели не то число");
             changeDirectory();
         }
 
+    }
+
+    private void createDirectory() {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        System.out.println("Введите название папки которую хотите создать");
+        Path name = null;
+        try {
+            name = Path.of(bufferedReader.readLine());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Path path;
+        if (name != null) {
+            path = Path.of(getPathNow() + "/" + name + "/");
+            if (!Files.exists(path)) {
+                try {
+                    Files.createDirectory(path);
+                    System.out.println("Папка с названием " + name + " была успешно создана");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                System.out.println("Папка с таким именем существует" + name);
+            }
+            System.out.println("path = " + path);
+        }
+
+
+    }
+
+    //    private void deleteDirectory(){
+//        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+//        List list = new ArrayList<>();
+//        try (DirectoryStream<Path> stream = Files.newDirectoryStream(getPathNow())) {
+//            for (Path entry : stream) {
+//                list.add(entry);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        System.out.println("Введите название папки которую хотите удалить");
+//        //
+//        Path nameDir = null;
+//        try {
+//            nameDir = Path.of(bufferedReader.readLine());
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        Path pathDir;
+//        if (nameDir != null) {
+//            pathDir = Path.of(getPathNow() + "/" + nameDir + "/");
+//            if (Files.exists(pathDir)) {
+//                try {
+//                    Files.delete(pathDir);
+//                    System.out.println("Папка с названием " + pathDir + " была успешно удалена");
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            } else {
+//                System.out.println("Папка с таким именем не существует" + pathDir);
+//            }
+//            System.out.println("path = " + pathDir);
+//        }
+//    }
+    private void deleteDirectory() {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        System.out.println("Введите название папки которую хотите удалить");
+        String dirName;
+        try {
+            dirName = bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Path dirPath = getPathNow().resolve(dirName);
+
+        if (Files.exists(dirPath) && Files.isDirectory(dirPath)) {
+            System.out.println("Папка " + dirName + " не пуста. Видалити всі файли та папку? (yes/no)");
+            String userChoice;
+            try {
+                userChoice = bufferedReader.readLine();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (userChoice.equals("yes")) {
+                deleteFilesAndDirectories(dirPath);
+                System.out.println("Папка " + dirName + " та всі її вміст видалено.");
+            } else {
+                System.out.println("Видалення скасовано.");
+            }
+        } else {
+            System.out.println("Папка з таким ім'ям не існує або це не папка.");
+        }
+    }
+
+    private void deleteFilesAndDirectories(Path directoryPath) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directoryPath)) {
+            for (Path entry : stream) {
+                if (Files.isDirectory(entry)) {
+                    deleteFilesAndDirectories(entry);
+                } else {
+                    Files.delete(entry);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Files.delete(directoryPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
