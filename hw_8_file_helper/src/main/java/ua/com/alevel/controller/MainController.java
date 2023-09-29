@@ -41,10 +41,9 @@ public class MainController {
         System.out.println();
         System.out.println("If u wanna readDirectory press 1");
         System.out.println("If u wanna changeDirectory press 2");
-        System.out.println("If u createDirectory press 3");
-        System.out.println("If u wanna deleteDirectory press 4");
-        System.out.println("If u wanna пошук файла чи папки по зазначеній директорії press 4");
-        System.out.println("If u wanna пошук тексту в усіх файлах та папках по зазначеній директорії press 5");
+        System.out.println("If u create file or Directory press 3");
+        System.out.println("If u wanna delete file or Directory press 4");
+        System.out.println("If u wanna moveFileOrDirectory press 5");
         System.out.println("If u wanna exit press 6");
         System.out.println();
     }
@@ -53,9 +52,9 @@ public class MainController {
         switch (position) {
             case "1" -> readDirectory();
             case "2" -> changeDirectory();
-            case "3" -> createDirectory();
+            case "3" -> createFileOrDir();
             case "4" -> deleteDirectory();
-            case "5" -> System.out.println("position = " + position);
+            case "5" -> moveFileOrDirectory();
             case "6" -> System.exit(0);
         }
     }
@@ -94,7 +93,11 @@ public class MainController {
     private void readDirectory() {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(getPathNow())) {
             for (Path entry : stream) {
-                System.out.println(entry.getFileName());
+                if (Files.isDirectory(entry)) {
+                    System.out.println("Dir: " + entry.getFileName());
+                } else {
+                    System.out.println("File: " + entry.getFileName());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -150,9 +153,59 @@ public class MainController {
 
     }
 
+    private void createFileOrDir() {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println();
+        System.out.println("Введите 1 если хотите создать папку");
+        System.out.println("Введите 2 если хотите создать файл");
+        String choose;
+        try {
+            choose = bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if (Integer.parseInt(choose) == 1) {
+            System.out.println("Вы выбрали создать папку");
+            createDirectory();
+        } else if (Integer.parseInt(choose) == 2) {
+            System.out.println("Вы выбрали создать файл");
+            createFile();
+        } else {
+            System.out.println("Вы ввели не то значение");
+            createFileOrDir();
+        }
+    }
+
+    private void createFile() {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Введите название файла который вы хотите создать");
+        Path name = null;
+        try {
+            name = Path.of(bufferedReader.readLine());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Path path;
+        if (name != null) {
+            path = Path.of(getPathNow() + "/" + name + "/");
+            if (!Files.exists(path)) {
+                try {
+                    Files.createFile(path);
+                    System.out.println("Файл с названием " + name + " был успешно создан");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                System.out.println("Файл с таким именем существует " + name);
+            }
+            System.out.println("path = " + path);
+        }
+
+
+    }
+
     private void createDirectory() {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-
         System.out.println("Введите название папки которую хотите создать");
         Path name = null;
         try {
@@ -171,7 +224,7 @@ public class MainController {
                     throw new RuntimeException(e);
                 }
             } else {
-                System.out.println("Папка с таким именем существует" + name);
+                System.out.println("Папка с таким именем существует " + name);
             }
             System.out.println("path = " + path);
         }
@@ -251,7 +304,7 @@ public class MainController {
                 e.printStackTrace();
             }
             System.out.println("Файл с названием: " + dirPath + " был успешно удален");
-            
+
         } else {
             System.out.println("Папка з таким ім'ям не існує або це не папка.");
         }
@@ -274,6 +327,75 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void moveFileOrDirectory() {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        readDirectory();
+        System.out.println("Enter the name of the file or directory you want to move:");
+        String sourceName;
+
+        try {
+            sourceName = bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Path sourcePath = getPathNow().resolve(sourceName);
+
+        if (Files.exists(sourcePath)) {
+
+            System.out.println("Enter the destination directory where you want to move it:");
+            String chooseDirectoryForMove = chooseDirectoryForMove();
+            if (chooseDirectoryForMove != null) {
+                Path destinationPath = Paths.get(chooseDirectoryForMove);
+                if (Files.isDirectory(destinationPath)) {
+                    Path destination = destinationPath.resolve(sourcePath.getFileName());
+
+                    try {
+                        Files.move(sourcePath, destination);
+                        System.out.println("File or directory moved successfully.");
+                    } catch (IOException e) {
+                        System.err.println("Error moving file or directory: " + e.getMessage());
+                    }
+                } else {
+                    System.out.println("Destination is not a directory.");
+                }
+            }
+
+        }else {
+            System.out.println("File or directory with that name does not exist.");
+        }
+
+
+    }
+
+    private String chooseDirectoryForMove() {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        String bufferedReaderChoose;
+        String path = null;
+        boolean choose = true;
+        while (choose) {
+            try {
+                System.out.println("Вы сейчас находитесь в " + getPathNow());
+                System.out.println("Введите 1 если это не та дериктория");
+                System.out.println("Введите 2 если это нужная дериктория для перемещения");
+                bufferedReaderChoose = bufferedReader.readLine();
+                if (Integer.parseInt(bufferedReaderChoose) == 1) {
+                    System.out.println(getPathNow());
+                    changeDirectory();
+                } else if (Integer.parseInt(bufferedReaderChoose) == 2) {
+                    path = String.valueOf(getPathNow());
+                    choose = false;
+                }
+
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+        return path;
     }
 
 }
