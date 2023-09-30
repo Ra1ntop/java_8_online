@@ -44,7 +44,8 @@ public class MainController {
         System.out.println("If u create file or Directory press 3");
         System.out.println("If u wanna delete file or Directory press 4");
         System.out.println("If u wanna moveFileOrDirectory press 5");
-        System.out.println("If u wanna exit press 6");
+        System.out.println("findFileOrDirectory press 6");
+        System.out.println("If u wanna exit press 7");
         System.out.println();
     }
 
@@ -55,7 +56,8 @@ public class MainController {
             case "3" -> createFileOrDir();
             case "4" -> deleteDirectory();
             case "5" -> moveFileOrDirectory();
-            case "6" -> System.exit(0);
+            case "6" -> findFileOrDirectory();
+            case "7" -> System.exit(0);
         }
     }
 
@@ -67,9 +69,6 @@ public class MainController {
         System.out.println("                              You use " + osName + " operation system");
         String language = System.getProperty("user.language");
         System.out.println("Язык системы: " + language);
-        //
-
-
     }
 
     private void setPathDefault() {
@@ -232,41 +231,7 @@ public class MainController {
 
     }
 
-    //    private void deleteDirectory(){
-//        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-//        List list = new ArrayList<>();
-//        try (DirectoryStream<Path> stream = Files.newDirectoryStream(getPathNow())) {
-//            for (Path entry : stream) {
-//                list.add(entry);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        System.out.println("Введите название папки которую хотите удалить");
-//        //
-//        Path nameDir = null;
-//        try {
-//            nameDir = Path.of(bufferedReader.readLine());
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        Path pathDir;
-//        if (nameDir != null) {
-//            pathDir = Path.of(getPathNow() + "/" + nameDir + "/");
-//            if (Files.exists(pathDir)) {
-//                try {
-//                    Files.delete(pathDir);
-//                    System.out.println("Папка с названием " + pathDir + " была успешно удалена");
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            } else {
-//                System.out.println("Папка с таким именем не существует" + pathDir);
-//            }
-//            System.out.println("path = " + pathDir);
-//        }
-//    }
+
     private void deleteDirectory() {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -363,7 +328,7 @@ public class MainController {
                 }
             }
 
-        }else {
+        } else {
             System.out.println("File or directory with that name does not exist.");
         }
 
@@ -398,4 +363,55 @@ public class MainController {
         return path;
     }
 
+    private void findFileOrDirectory(){
+        System.out.println();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Введите название папки которую хотите найти");
+        String choose;
+        Path path;
+        try {
+            choose = bufferedReader.readLine();
+            path = getPathNow();
+            findFiles(path, choose);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+//    ArrayList arrayList = new ArrayList();
+    private void findFiles(Path directoryPath, String choose){
+        Path path = (directoryPath);
+        Path path1;
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
+            for (Path entry : stream) {
+                String test = String.valueOf(entry);
+                if (test.indexOf(choose)>=0){
+                    System.out.println("Вот все папки и файлы с похожими именами");
+                    System.out.println("entry = " + entry);
+//                    arrayList.add(entry);
+
+                }
+                if (Files.isDirectory(entry)) {
+                    findFiles(entry, choose);
+                } else {
+                    //
+                }
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        findFilesEquals(arrayList);
+    }
+//    private void findFilesEquals(ArrayList arrayList){
+//        System.out.println(arrayList);
+//        if (!arrayList.isEmpty()){
+//            for (int i = 0; i < arrayList.toArray().length; i++) {
+//                System.out.println(arrayList.get(i));
+//            }
+//        }
+//
+//    }
 }
