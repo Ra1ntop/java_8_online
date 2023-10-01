@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -45,7 +47,8 @@ public class MainController {
         System.out.println("If u wanna delete file or Directory press 4");
         System.out.println("If u wanna moveFileOrDirectory press 5");
         System.out.println("findFileOrDirectory press 6");
-        System.out.println("If u wanna exit press 7");
+        System.out.println("findText press 7");
+        System.out.println("If u wanna exit press 8");
         System.out.println();
     }
 
@@ -57,7 +60,8 @@ public class MainController {
             case "4" -> deleteDirectory();
             case "5" -> moveFileOrDirectory();
             case "6" -> findFileOrDirectory();
-            case "7" -> System.exit(0);
+            case "7" -> findText();
+            case "8" -> System.exit(0);
         }
     }
 
@@ -363,7 +367,7 @@ public class MainController {
         return path;
     }
 
-    private void findFileOrDirectory(){
+    private void findFileOrDirectory() {
         System.out.println();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите название папки которую хотите найти");
@@ -379,14 +383,15 @@ public class MainController {
 
 
     }
-//    ArrayList arrayList = new ArrayList();
-    private void findFiles(Path directoryPath, String choose){
+
+    //    ArrayList arrayList = new ArrayList();
+    private void findFiles(Path directoryPath, String choose) {
         Path path = (directoryPath);
         Path path1;
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
             for (Path entry : stream) {
                 String test = String.valueOf(entry);
-                if (test.indexOf(choose)>=0){
+                if (test.indexOf(choose) >= 0) {
                     System.out.println("Вот все папки и файлы с похожими именами");
                     System.out.println("entry = " + entry);
 //                    arrayList.add(entry);
@@ -405,7 +410,8 @@ public class MainController {
         }
 //        findFilesEquals(arrayList);
     }
-//    private void findFilesEquals(ArrayList arrayList){
+
+    //    private void findFilesEquals(ArrayList arrayList){
 //        System.out.println(arrayList);
 //        if (!arrayList.isEmpty()){
 //            for (int i = 0; i < arrayList.toArray().length; i++) {
@@ -414,4 +420,52 @@ public class MainController {
 //        }
 //
 //    }
+    public void findText() {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Введите текст для поиска:");
+        String searchText;
+        try {
+            searchText = bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("Результаты поиска текста '" + searchText + "':");
+        findTextInDirectory(getPathNow(), searchText);
+    }
+
+    private void findTextInDirectory(Path directoryPath, String searchText) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directoryPath)) {
+            for (Path entry : stream) {
+                if (Files.isDirectory(entry)) {
+                    findTextInDirectory(entry, searchText); // Рекурсивный вызов для подпапок
+                } else if (Files.isRegularFile(entry)) {
+                    if (searchTextInFile(entry, searchText)) {
+                        System.out.println("Файл: " + entry);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean searchTextInFile(Path filePath, String searchText) {
+        try {
+            List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
+            for (String line : lines) {
+                try {
+                    if (line.contains(searchText)) {
+                        return true;
+                    }
+                } catch (Exception e) {
+                    // Обработка ошибки, если возникают проблемы при сравнении строк
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+
+        }
+        return false;
+    }
+
 }
