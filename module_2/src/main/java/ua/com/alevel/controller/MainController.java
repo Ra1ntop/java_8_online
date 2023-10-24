@@ -1,108 +1,153 @@
 package ua.com.alevel.controller;
 
-import ua.com.alevel.FilePath;
+import ua.com.alevel.entity.City;
+import ua.com.alevel.entity.Neighbor;
+import ua.com.alevel.service.MainService;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainController {
-    private final boolean checker = false;
-    public void start() throws IOException {
-        createFile();
-        inputFileReader(FilePath.INPUT_FILE_NAME.getFilePath());
+    MainService mainService = new MainService();
+    public void start(){
+        mainService.startMainService();
+        read();
     }
 
-    private void createFile() {
-        if (!checker) {
-            String filePath = FilePath.INPUT_FILE_NAME.getFilePath();
-            File file = new File(filePath);
-            System.out.println("file = " + file.getPath());
-            System.out.println("file = " + file.getAbsolutePath());
-            System.out.println("isFile before create = " + file.isFile());
-            boolean result = false;
-            try {
+    private void read(){
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("input.txt"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"));
 
-                result = file.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            String line;
+            int n = 0;
+
+            // Чтение количества городов
+            if ((line = reader.readLine()) != null) {
+                try {
+                    n = Integer.parseInt(line);
+                } catch (NumberFormatException e) {
+                    System.err.println("Ошибка: Неверный формат числа городов.");
+                    return;
+                }
             }
-            if (result) {
-                System.out.println("File was created");
-                defaultInputFileWriter();
-            } else {
-                System.out.println("file exist");
+
+            List<City> cities = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                // Чтение имени города
+                String cityName = reader.readLine();
+                if (cityName == null || cityName.trim().isEmpty()) {
+                    System.err.println("Ошибка: Имя города не может быть пустым.");
+                    return;
+                }
+                City city = new City(cityName);
+
+                // Чтение количества соседей
+                int p = 0;
+                if ((line = reader.readLine()) != null) {
+                    try {
+                        p = Integer.parseInt(line);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Ошибка: Неверный формат числа соседей для города " + cityName);
+                        return;
+                    }
+                }
+
+                for (int j = 0; j < p; j++) {
+                    // Чтение данных о соседях
+                    if ((line = reader.readLine()) != null) {
+                        String[] neighborData = line.split(" ");
+                        if (neighborData.length != 2) {
+                            System.err.println("Ошибка: Неверный формат данных о соседе для города " + cityName);
+                            return;
+                        }
+
+                        try {
+                            int neighborIndex = Integer.parseInt(neighborData[0]) - 1;
+                            int cost = Integer.parseInt(neighborData[1]);
+                            city.getNeighbors().add(new Neighbor(neighborIndex, cost));
+                        } catch (NumberFormatException e) {
+                            System.err.println("Ошибка: Неверный формат данных о соседе для города " + cityName);
+                            return;
+                        }
+                    } else {
+                        System.err.println("Ошибка: Недостаточно данных о соседях для города " + cityName);
+                        return;
+                    }
+                }
+                cities.add(city);
             }
-            System.out.println("isFile after create = " + file.isFile());
 
-        }else {
-            String filePath = FilePath.OUTPUT_FILE_NAME.getFilePath();
-            File file = new File(filePath);
-            System.out.println("file = " + file.getPath());
-            System.out.println("file = " + file.getAbsolutePath());
-            System.out.println("isFile before create = " + file.isFile());
-            boolean result = false;
-            try {
-
-                result = file.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            int r = 0;
+            // Чтение количества запросов
+            if ((line = reader.readLine()) != null) {
+                try {
+                    r = Integer.parseInt(line);
+                } catch (NumberFormatException e) {
+                    System.err.println("Ошибка: Неверный формат числа запросов.");
+                    return;
+                }
             }
-            if (result) {
-                System.out.println("File was created");
-            } else {
-                System.out.println("file exist");
+
+            for (int i = 0; i < r; i++) {
+                if ((line = reader.readLine()) != null) {
+                    String[] pathData = line.split(" ");
+                    if (pathData.length != 2) {
+                        System.err.println("Ошибка: Неверный формат данных для запроса #" + (i + 1));
+                        continue;
+                    }
+
+                    String startCityName = pathData[0];
+                    String endCityName = pathData[1];
+                    int startIndex = -1;
+                    int endIndex = -1;
+                    for (int j = 0; j < n; j++) {
+                        if (cities.get(j).getName().equals(startCityName)) {
+                            startIndex = j;
+                        }
+                        if (cities.get(j).getName().equals(endCityName)) {
+                            endIndex = j;
+                        }
+                    }
+                    if (startIndex == -1 || endIndex == -1) {
+                        System.err.println("Ошибка: Не удалось найти указанные города для запроса #" + (i + 1));
+                        continue;
+                    }
+
+                    List<String> path = new ArrayList<>();
+                    int minCost = findMinCost(cities, startIndex, endIndex, path, 0);
+                    writer.write(minCost + "\n");
+                } else {
+                    System.err.println("Ошибка: Недостаточно данных для запроса #" + (i + 1));
+                }
             }
-            System.out.println("isFile after create = " + file.isFile());
-        }
-    }
 
-    private void defaultInputFileWriter(){
-        String file = FilePath.INPUT_FILE_NAME.getFilePath();
-        try(FileWriter fileWriter = new FileWriter(file, true)) {
-            fileWriter.write("4\n");
-            fileWriter.write("gdansk\n");
-            fileWriter.write("2\n");
-            fileWriter.write("2 1\n");
-            fileWriter.write("3 3\n");
-            fileWriter.write("bydgoszcz\n");
-            fileWriter.write("3\n");
-            fileWriter.write("1 1\n");
-            fileWriter.write("3 1\n");
-            fileWriter.write("4 4\n");
-            fileWriter.write("torun\n");
-            fileWriter.write("3\n");
-            fileWriter.write("1 3\n");
-            fileWriter.write("2 1\n");
-            fileWriter.write("4 1\n");
-            fileWriter.write("warszawa\n");
-            fileWriter.write("2\n");
-            fileWriter.write("2 4\n");
-            fileWriter.write("3 1\n");
-            fileWriter.write("2\n");
-            fileWriter.write("gdansk warszawa\n");
-            fileWriter.write("bydgoszcz warszawa\n");
-
-
+            reader.close();
+            writer.close();
         } catch (IOException e) {
-            System.out.println("e = " + e.getMessage());
+            e.printStackTrace();
         }
+
     }
-    private void inputFileReader(String file){
-        ValidateController validateController = new ValidateController();
-        ArrayList arrayList = new ArrayList();
-        try(
-                FileReader fileReader = new FileReader(file);
-                BufferedReader bufferedReader = new BufferedReader(fileReader)
-        ) {
-            String text = "";
-            while (bufferedReader.ready()) {
-                text = bufferedReader.readLine();
-                arrayList.add(text);
-            }
-        } catch (IOException e) {
-            System.out.println("e = " + e.getMessage());
+    private int findMinCost(List<City> cities, int currentCityIndex, int endCityIndex, List<String> path, int currentCost) {
+        if (currentCityIndex == endCityIndex) {
+            System.out.println("Path: " + String.join(" -> ", path));
+            return currentCost;
         }
-        validateController.startValidate(arrayList);
+
+        int minCost = Integer.MAX_VALUE;
+        for (Neighbor neighbor : cities.get(currentCityIndex).getNeighbors()) {
+            if (!path.contains(cities.get(neighbor.getNeighborIndex()).getName())) {
+                path.add(cities.get(neighbor.getNeighborIndex()).getName());
+                int cost = findMinCost(cities, neighbor.getNeighborIndex(), endCityIndex, path, currentCost + neighbor.getCost());
+                if (cost != Integer.MAX_VALUE) {
+                    minCost = Math.min(minCost, cost);
+                }
+                path.remove(path.size() - 1);
+            }
+        }
+
+        return minCost;
     }
 }

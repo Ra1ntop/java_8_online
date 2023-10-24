@@ -1,22 +1,33 @@
 6
-gdansk /city
-2   /capacityNeibherhood
+gdansk
+3
 2 1
 3 3
+5 4
 bydgoszcz
-3
+4
 1 1
 3 1
 4 4
+5 2
 torun
 3
 1 3
 2 1
 4 1
 warszawa
-2
+3
 2 4
 3 1
+6 2
+kiev
 2
-gdansk warszawa
+2 2
+1 3
+krakow
+1
+4 2
+3
+torun kiev
+krakow gdansk
 bydgoszcz warszawa

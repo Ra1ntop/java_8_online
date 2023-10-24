@@ -1,12 +1,10 @@
 package ua.com.alevel;
 
+import ua.com.alevel.Controller.MainController;
 
-import ua.com.alevel.controller.MainController;
-
-public class Main {
+public class MainStarter {
     public static void main(String[] args) {
         MainController mainController = new MainController();
         mainController.start();
     }
-
 }
