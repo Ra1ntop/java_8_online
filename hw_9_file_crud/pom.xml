@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>hw_2_base_operations</artifactId>
+    <groupId>ua.com.alevel</groupId>
+    <artifactId>hw_9_file_crud</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -15,8 +15,26 @@
         <java.version>17</java.version>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        <dependency>
+            <groupId>au.com.bytecode</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>2.4</version>
+        </dependency>
+    </dependencies>
+
     <build>
-        <finalName>Base_operations</finalName>
+        <finalName>hw_9_file_crud</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -50,4 +68,6 @@
             </plugin>
         </plugins>
     </build>
+
+
 </project>

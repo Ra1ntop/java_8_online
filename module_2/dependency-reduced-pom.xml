@@ -28,7 +28,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>ua.com.alevel.Main</mainClass>
+                  <mainClass>ua.com.alevel.Hw9Main</mainClass>
                 </transformer>
               </transformers>
             </configuration>
