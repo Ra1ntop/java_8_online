@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class GroupCrudDaoImpl implements GroupCrudDao {
+
     private List<Group> groups = new ArrayList<>();
     @Override
     public void create(Group group) {

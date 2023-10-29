@@ -14,12 +14,10 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainService {
-    StudentCrudDaoImpl studentCrudDao = new StudentCrudDaoImpl();
-    GroupCrudDaoImpl groupCrudDao = new GroupCrudDaoImpl();
-    private ArrayList<Student> Students = new ArrayList<>();
+
+    private final StudentCrudDaoImpl studentCrudDao = new StudentCrudDaoImpl();
+    private final GroupCrudDaoImpl groupCrudDao = new GroupCrudDaoImpl();
     private static int StudentCounter = 1;
-    private ArrayList<Group> groups = new ArrayList<>();
-    private static int groupCounter = 1;
     private static final int DEFAULT_GROUP_ID = -1;
 
     public void start() {
@@ -27,7 +25,8 @@ public class MainService {
         createGroupsFile();
         list();
     }
-    private void createStudentsFile(){
+
+    private void createStudentsFile() {
         File file = new File("students.csv");
         try {
             file.createNewFile();
@@ -35,7 +34,8 @@ public class MainService {
             throw new RuntimeException(e);
         }
     }
-    private void createGroupsFile(){
+
+    private void createGroupsFile() {
         File file = new File("groups.csv");
         try {
             file.createNewFile();
@@ -43,6 +43,7 @@ public class MainService {
             throw new RuntimeException(e);
         }
     }
+
     private void list() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -56,7 +57,6 @@ public class MainService {
             System.out.println("7. Вивести всі групи");
             System.out.println("8. Вивести студентів у групу");
             System.out.println("9. Вийти");
-
 
             int choice = 0;
             try {
@@ -124,7 +124,6 @@ public class MainService {
     }
 
     private void deleteStudent(BufferedReader reader) {
-
         try {
             listAllStudents();
             System.out.print("Введіть ID студента, якого потрібно видалити: ");
@@ -146,7 +145,6 @@ public class MainService {
             Group group = new Group();
             group.setName(nameGroup);
             groupCrudDao.create(group);
-            groupCounter++;
             System.out.println("Студент створений.");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -179,8 +177,6 @@ public class MainService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     private void addStudentToGroup(BufferedReader reader) {
@@ -289,7 +285,7 @@ public class MainService {
                 System.out.println("Cписок студентів у цій группі");
                 studentsArrayList.forEach(student -> {
 
-                    if (groupId == student.getGroupId()){
+                    if (groupId == student.getGroupId()) {
                         groupExists.set(true);
                         System.out.println("-------------------------------------------");
                         System.out.println("id = " + student.getId() + " ");
@@ -309,7 +305,6 @@ public class MainService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private boolean isNumeric(String str) {

@@ -4,32 +4,30 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
 public class MainService {
-    File file = new File("input.txt");
+    private final File file = new File("input.txt");
 
-
-    public void startMainService(){
-        if (checkIfFileExist()){
+    public void startMainService() {
+        if (checkIfFileExist()) {
             System.out.println("file exist");
-        }else {
+        } else {
             System.out.println("doesn't exist");
             createDefaultFile();
         }
     }
-    private boolean checkIfFileExist(){
+
+    private boolean checkIfFileExist() {
         boolean checker = false;
-        if (file.exists()&file.isFile()){
+        if (file.exists() & file.isFile()) {
             checker = true;
         }
 
-
         return checker;
     }
-    private void createDefaultFile(){
+
+    private void createDefaultFile() {
         boolean result = false;
         try {
-
             result = file.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -38,7 +36,6 @@ public class MainService {
             System.out.println("File was created");
             defaultInputFileWriter();
         }
-
     }
 
     private void defaultInputFileWriter() {

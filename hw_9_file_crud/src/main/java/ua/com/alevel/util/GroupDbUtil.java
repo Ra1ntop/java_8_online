@@ -6,7 +6,9 @@ import java.util.Collection;
 import java.util.Random;
 
 public class GroupDbUtil {
-    static Random random = new Random();
+
+    private final static Random random = new Random();
+
     public static <E extends Group> long generateId(Collection<E> entities) {
         long id = random.nextInt(1_000_000);
         if (entities.stream().anyMatch(e -> Long.valueOf(e.getId()).equals(id))) {

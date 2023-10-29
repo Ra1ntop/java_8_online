@@ -1,6 +1,5 @@
 package ua.com.alevel;
 
-
 import ua.com.alevel.controller.MainController;
 
 public class Main {
@@ -8,5 +7,4 @@ public class Main {
         MainController mainController = new MainController();
         mainController.start();
     }
-
 }
