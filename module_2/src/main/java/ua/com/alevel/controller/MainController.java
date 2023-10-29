@@ -22,8 +22,7 @@ public class MainController {
 
             String line;
             int n = 0;
-
-            // Чтение количества городов
+            
             if ((line = reader.readLine()) != null) {
                 try {
                     n = Integer.parseInt(line);
@@ -35,7 +34,6 @@ public class MainController {
 
             List<City> cities = new ArrayList<>();
             for (int i = 0; i < n; i++) {
-                // Чтение имени города
                 String cityName = reader.readLine();
                 if (cityName == null || cityName.trim().isEmpty()) {
                     System.err.println("Ошибка: Имя города не может быть пустым.");
@@ -43,7 +41,6 @@ public class MainController {
                 }
                 City city = new City(cityName);
 
-                // Чтение количества соседей
                 int p = 0;
                 if ((line = reader.readLine()) != null) {
                     try {
@@ -55,7 +52,6 @@ public class MainController {
                 }
 
                 for (int j = 0; j < p; j++) {
-                    // Чтение данных о соседях
                     if ((line = reader.readLine()) != null) {
                         String[] neighborData = line.split(" ");
                         if (neighborData.length != 2) {
@@ -80,7 +76,6 @@ public class MainController {
             }
 
             int r = 0;
-            // Чтение количества запросов
             if ((line = reader.readLine()) != null) {
                 try {
                     r = Integer.parseInt(line);
