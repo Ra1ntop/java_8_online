@@ -1,15 +1,12 @@
 package ua.com.alevel.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Student {
+
     private long id;
     private String name;
     private String last_name;
     private int age;
     private long groupId;
-
 
     public long getId() {
         return id;

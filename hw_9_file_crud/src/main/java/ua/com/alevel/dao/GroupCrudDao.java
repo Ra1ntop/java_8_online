@@ -10,5 +10,4 @@ public interface GroupCrudDao<BE extends Group> {
     void delete(Long id);
     boolean existsById(Long id);
     Collection findAll();
-
 }
