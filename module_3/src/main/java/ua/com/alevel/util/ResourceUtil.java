@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public final class ResourceUtil extends Object {
+public final class ResourceUtil {
 
     private ResourceUtil() {}
 
@@ -17,7 +17,6 @@ public final class ResourceUtil extends Object {
             Map<String, String> map = new HashMap<>();
             for (Map.Entry<Object, Object> entry : properties.entrySet()) {
                 map.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
-                System.out.println(entry.getKey() + "" + entry.getValue());
             }
             return map;
         } catch (IOException e) {
