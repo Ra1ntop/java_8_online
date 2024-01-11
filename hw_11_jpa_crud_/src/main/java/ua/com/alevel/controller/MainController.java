@@ -45,15 +45,14 @@ public class MainController {
         System.out.println("4. findByIDStudent");
         System.out.println("5. findAllStudents");
         System.out.println("6. Create Group");
-        System.out.println("7. updateGroup");
-        System.out.println("8. deleteGroup");
-        System.out.println("Find group enter 9");
-        System.out.println("Find all groups enter 10");
-        System.out.println("Add student to group enter 11");
-        System.out.println("Delete student from group enter 12");
-        System.out.println("Find all students in group enter 13");
-        System.out.println("Find all groups for student enter 14");
-        System.out.println("Exit program enter 0");
+        System.out.println("7. deleteGroup");
+        System.out.println("8. findByIdGroup");
+        System.out.println("9. findAllGroups");
+        System.out.println("10. addStudentToGroup");
+        System.out.println("11. deleteStudentFromGroup");
+        System.out.println("12. findAllStudentsInGroup");
+        System.out.println("13. findAllGroupsForStudent");
+        System.out.println("0. Exit");
         System.out.println("---------------------------------------------");
     }
 
@@ -61,21 +60,48 @@ public class MainController {
     private void crud(String position, BufferedReader reader) throws IOException {
 
         switch (position) {
-            case "1" -> createStudent(reader);
-            case "2" -> updateStudent(reader);
-            case "3" -> deleteStudent(reader);
-            case "4" -> findByIDStudent(reader);
-            case "5" -> findAllStudents();
-            case "6" -> createGroup(reader);
-            case "7" -> updateGroup(reader);
-            case "8" -> deleteGroup(reader);
-            case "9" -> findByIdGroup(reader);
-            case "10" -> findAllGroups();
-            case "11" -> addStudentToGroup(reader);
-            case "12" -> deleteStudentFromGroup(reader);
-            case "13" -> findAllStudentsInGroup(reader);
-            case "14" -> findAllGroupsForStudent(reader);
-            case "0" -> System.exit(0);
+            case "1":
+                createStudent(reader);
+                break;
+            case "2":
+                updateStudent(reader);
+                break;
+            case "3":
+                deleteStudent(reader);
+                break;
+            case "4":
+                findByIDStudent(reader);
+                break;
+            case "5":
+                findAllStudents();
+                break;
+            case "6":
+                createGroup(reader);
+                break;
+            case "7":
+                deleteGroup(reader);
+                break;
+            case "8":
+                findByIdGroup(reader);
+                break;
+            case "9":
+                findAllGroups();
+                break;
+            case "10":
+                addStudentToGroup(reader);
+                break;
+            case "11":
+                deleteStudentFromGroup(reader);
+                break;
+            case "12":
+                findAllStudentsInGroup(reader);
+                break;
+            case "13":
+                findAllGroupsForStudent(reader);
+                break;
+            case "0":
+                System.exit(0);
+
         }
     }
 
@@ -154,16 +180,6 @@ public class MainController {
         Group group = new Group();
         group.setGroupName(gn);
         groupCrudService.create(group);
-    }
-
-    private void updateGroup(BufferedReader reader) throws IOException {
-        System.out.println("enter id");
-        Long id = Long.valueOf(reader.readLine());
-        System.out.println("Enter teachers name");
-        String tn = reader.readLine();
-        Group group = new Group();
-        group.setId(id);
-        groupCrudService.update(group);
     }
 
     private void deleteGroup(BufferedReader reader) throws IOException {

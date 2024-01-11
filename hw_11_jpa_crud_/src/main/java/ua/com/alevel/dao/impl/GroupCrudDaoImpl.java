@@ -25,9 +25,6 @@ public class GroupCrudDaoImpl implements GroupCrudDao {
 
     @Override
     public void update(Group entity) {
-        entityManager.getTransaction().begin();
-        entityManager.merge(entity);
-        entityManager.getTransaction().commit();
     }
 
     @Override

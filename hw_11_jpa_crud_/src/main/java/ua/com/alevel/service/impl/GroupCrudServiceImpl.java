@@ -25,6 +25,7 @@ public class GroupCrudServiceImpl implements GroupCrudService {
     public void update(Group entity) {
         Optional<Group> optionalGroup = groupCrudDao.findById(entity.getId());
         if (optionalGroup.isEmpty()) {
+
             throw new RuntimeException("Group not found");
         }
         groupCrudDao.update(entity);
