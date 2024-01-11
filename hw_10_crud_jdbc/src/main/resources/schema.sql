@@ -1,4 +1,4 @@
-create schema java_hw_9 default character set utf8;
+create schema java_hw_11 default character set utf8;
 
 use java_hw_9;
 create table students
